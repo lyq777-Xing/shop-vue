@@ -78,8 +78,8 @@
           <el-input v-model="addform.supplier_id"></el-input>
         </el-form-item> -->
         <el-form-item label="供货商" prop="supplier_id">
-            <el-select v-model="addform.supplier_id" v-for="item in supplierData" :key="item.id" placeholder="供货商">
-                <el-option :label="item.username" :value="item.id"></el-option>
+            <el-select v-model="addform.supplier_id" placeholder="供货商">
+                <el-option :label="item.username" v-for="item in supplierData" :key="item.id" :value="item.id"></el-option>
             </el-select>
         </el-form-item>
         <el-form-item label="货物分类" prop="order_title">
@@ -106,9 +106,9 @@
         <!-- <el-form-item label="供货商id" prop="supplier_id">
           <el-input v-model="editform.supplier_id"></el-input>
         </el-form-item> -->
-         <el-form-item label="供货商">
-            <el-select v-model="editform.supplier_id" prop="supplier_id" v-for="item in supplierData" :key="item.id" placeholder="供货商">
-                <el-option :label="item.username" :value="item.id"></el-option>
+         <el-form-item label="供货商"  prop="supplier_id">
+            <el-select v-model="editform.supplier_id"  placeholder="供货商">
+                <el-option v-for="item in supplierData" :key="item.id" :label="item.username" :value="item.id"></el-option>
             </el-select>
         </el-form-item>
         <el-form-item label="货物分类" prop="order_title">
@@ -163,7 +163,7 @@ export default {
       editFormrules:{
         order_id:[{required:true,message:'请输入订单编号',trigger:'blur'}],
         order_status:[{required:true,message:'请输入发货状态',trigger:'blur'}],
-        supplier_id:[{required:true,message:'请输入供货商id',trigger:'blur'}],
+        supplier_id:[{required:true,message:'请输入供货商',trigger:'blur'}],
         order_title:[{required:true,message:'请输入货物分类',trigger:'blur'}]
       },
       deleteId:'',
@@ -177,7 +177,6 @@ export default {
   methods: {
     async getOrderList () {
       const { data: res } = await this.$http.get('orders',{params:this.queryInfo})
-
       if(res.meta.status === 403){
           this.$router.push("/welcome")
           return this.$message.error('权限不足，无法访问')
@@ -185,7 +184,6 @@ export default {
       else if (res.meta.status !== 200) {
         return this.$message.error('获取订单列表失败！')
       }
-
       console.log(res)
       this.total = res.data.total
       this.orderlist = res.data.records

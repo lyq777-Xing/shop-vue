@@ -6,14 +6,13 @@ import Welcome from '../components/Welcome.vue'
 import Users from '../components/user/Users.vue'
 import Rights from '../components/power/Rights.vue'
 import Roles from '../components/power/Roles.vue'
-import Cate from '../components/goods/Cate.vue'
-import Params from '../components/goods/Params.vue'
 import List from '../components/goods/List.vue'
 import Order from '../components/order/Order.vue'
 import Cashier from '../components/user/Cashier.vue'
 import Supplier from '../components/user/Supplier.vue'
 import Administrators from '../components/user/Administrators.vue'
 import Membershipcard from '../components/card/Membershipcard.vue'
+import Chainstore from '../components/hotel/Chainstore.vue'
 Vue.use(VueRouter)
 
 const routes = [
@@ -27,17 +26,14 @@ const routes = [
             { path: '/welcome', component: Welcome },
             { path: '/users', component: Users },
             { path: '/cashier', component: Cashier },
+            { path: '/chainstore', component: Chainstore },
             { path: '/administrators', component: Administrators },
             { path: '/supplier', component: Supplier },
             { path: '/rights', component: Rights },
             { path: '/roles', component: Roles },
-            { path: '/categories', component: Cate },
-            { path: '/params', component: Params },
             { path: '/goods', component: List },
-            // { path: '/goods/add', component: Add },
-            // { path: '/goods/update', component: Update },
             { path: '/orders', component: Order },
-            { path: '/membershipcard', component: Membershipcard },
+            { path: '/membershipcard', component: Membershipcard }
         ]
     }
 ]

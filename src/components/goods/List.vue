@@ -93,8 +93,8 @@
             <el-input v-model="addform.supplierService_id"></el-input>
         </el-form-item> -->
         <el-form-item label="供货商" prop="supplierService_id">
-            <el-select v-model="addform.supplierService_id" v-for="item in supplierData" :key="item.id" placeholder="供货商">
-                <el-option :label="item.username" :value="item.id"></el-option>
+            <el-select v-model="addform.supplierService_id" placeholder="供货商">
+                <el-option :label="item.username" v-for="item in supplierData" :key="item.id" :value="item.id"></el-option>
             </el-select>
         </el-form-item>
         </el-form>
@@ -147,8 +147,8 @@
                     <el-input v-model="editform.supplierService_id"></el-input>
                 </el-form-item> -->
                 <el-form-item label="供货商">
-                    <el-select v-model="editform.supplierService_id" v-for="item in supplierData" :key="item.id" placeholder="供货商">
-                        <el-option :label="item.username" :value="item.id"></el-option>
+                    <el-select v-model="editform.supplierService_id"  placeholder="供货商">
+                        <el-option v-for="item in supplierData" :key="item.id" :label="item.username" :value="item.id"></el-option>
                     </el-select>
                 </el-form-item>
             </el-form>
@@ -223,7 +223,10 @@ export default {
             editform:{
 
             },
-            supplierData:[]
+            supplierData:[],
+            card:{
+                manager_id:0,
+            }
         }
     },
     created(){

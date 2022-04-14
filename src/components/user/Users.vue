@@ -56,6 +56,12 @@
      <el-form-item label="密码" prop="password">
     <el-input v-model="addForm.password"></el-input>
   </el-form-item>
+  <el-form-item label="用户角色" prop="rid">
+    <el-select v-model="addForm.rid" placeholder="请选择用户角色">
+      <el-option label="普通用户" value="43"></el-option>
+      <el-option label="会员用户" value="44"></el-option>
+    </el-select>
+  </el-form-item>
     <!-- <el-form-item label="注册时间" prop="create_time">
     <el-input v-model="addForm.password"></el-input>
   </el-form-item> -->
@@ -79,6 +85,12 @@
   </el-form-item>
     <el-form-item label="电话" prop="mobile">
     <el-input v-model="editForm.mobile"></el-input>
+  </el-form-item>
+  <el-form-item label="用户角色" prop="rid">
+    <el-select v-model="editForm.rid" placeholder="请选择用户角色">
+      <el-option label="普通用户" value=43></el-option>
+      <el-option label="会员用户" value=44></el-option>
+    </el-select>
   </el-form-item>
 </el-form>
   <span slot="footer" class="dialog-footer">
@@ -131,24 +143,22 @@ userlist:[],
 addForm:{username:'',
 email:'',
 mobile:'',
-rid:43,
+rid:'',
 password:''
-
-
-
-
 },
 addFormrules:{
 username:[{required:true,message:'请输入姓名',trigger:'blur'},{min:3,max:10,message:'用户名的长度在3到10之间',trigger:'blur'}],
 email:[{required:true,message:'请输入邮箱',trigger:'blur'},{validator:checkEmail,trigger:'blur'}],
 mobile:[{required:true,message:'请输入电话号码',trigger:'blur'},{validator:checkMobile,trigger:'blur'}],
-password:[{required:true,message:'请输入密码',trigger:'blur'}]
+password:[{required:true,message:'请输入密码',trigger:'blur'}],
+rid:[{required:true,message:'请选择用户角色',trigger:'blur'}]
 
 },
 editForm:{},
 editFormrules:{
 email:[{required:true,message:'请输入邮箱',trigger:'blur'},{validator:checkEmail,trigger:'blur'}],
-mobile:[{required:true,message:'请输入电话号码',trigger:'blur'},{validator:checkMobile,trigger:'blur'}]
+mobile:[{required:true,message:'请输入电话号码',trigger:'blur'},{validator:checkMobile,trigger:'blur'}],
+rid:[{required:true,message:'请选择用户角色',trigger:'blur'}]
 },
 deleteid:''
       }
@@ -224,6 +234,11 @@ this.$refs.addFormRef.resetFields()
       }else{
         this.editDialogVisible=true
         this.editForm=res.data[0]
+        // if(this.editForm.rid = 43){
+        //   this.editForm.rid = '普通用户'
+        // }else if(this.editForm.rid = 44){
+        //   this.editForm.rid = '会员用户'
+        // }
         this.$message.success("查询成功")
         console.log(this.editForm.id)
           }

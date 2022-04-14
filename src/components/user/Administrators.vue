@@ -102,21 +102,20 @@
 <script>
 export default {
     data(){
-var checkEmail=(rule,value,cb)=>{
-const regEmail=/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(\.[a-zA-Z0-9_-])+/
-if(regEmail.test(value)){
-  return cb()
-}
-cb(new Error('请输入合法的邮箱'))
-}
-var checkMobile=(rule,value,cb)=>{
-const regMobile=/^(0|86|17951)?(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$/
-if(regMobile.test(value)){
-  return cb()
-}
-cb(new Error('请输入合法的手机号'))
-
-}
+      var checkEmail=(rule,value,cb)=>{
+        const regEmail=/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(\.[a-zA-Z0-9_-])+/
+        if(regEmail.test(value)){
+          return cb()
+        }
+        cb(new Error('请输入合法的邮箱'))
+      }
+      var checkMobile=(rule,value,cb)=>{
+        const regMobile=/^(0|86|17951)?(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$/
+        if(regMobile.test(value)){
+          return cb()
+        }
+        cb(new Error('请输入合法的手机号'))
+      }
       return{
         deleteDialogVisible:false,
         userinfo:{},
@@ -126,31 +125,28 @@ cb(new Error('请输入合法的手机号'))
         editDialogVisible:false,
         addDialogVisible:false,
         input3:'',
-select: '',
-userlist:[],
-addForm:{username:'',
-email:'',
-mobile:'',
-rid:30,
-password:''
-
-
-
-
-},
-addFormrules:{
-username:[{required:true,message:'请输入姓名',trigger:'blur'},{min:3,max:10,message:'用户名的长度在3到10之间',trigger:'blur'}],
-email:[{required:true,message:'请输入邮箱',trigger:'blur'},{validator:checkEmail,trigger:'blur'}],
-mobile:[{required:true,message:'请输入电话号码',trigger:'blur'},{validator:checkMobile,trigger:'blur'}],
-password:[{required:true,message:'请输入密码',trigger:'blur'}]
-
-},
-editForm:{},
-editFormrules:{
-email:[{required:true,message:'请输入邮箱',trigger:'blur'},{validator:checkEmail,trigger:'blur'}],
-mobile:[{required:true,message:'请输入电话号码',trigger:'blur'},{validator:checkMobile,trigger:'blur'}]
-},
-deleteid:''
+        select: '',
+        userlist:[],
+        addForm:{
+          username:'',
+          email:'',
+          mobile:'',
+          rid:50,
+          password:''
+        },
+        addFormrules:{
+          username:[{required:true,message:'请输入姓名',trigger:'blur'},{min:3,max:10,message:'用户名的长度在3到10之间',trigger:'blur'}],
+          email:[{required:true,message:'请输入邮箱',trigger:'blur'},{validator:checkEmail,trigger:'blur'}],
+          mobile:[{required:true,message:'请输入电话号码',trigger:'blur'},{validator:checkMobile,trigger:'blur'}],
+          password:[{required:true,message:'请输入密码',trigger:'blur'}],
+          rid:[{required:true,message:'请选择用户角色',trigger:'blur'}]
+        },
+        editForm:{},
+        editFormrules:{
+          email:[{required:true,message:'请输入邮箱',trigger:'blur'},{validator:checkEmail,trigger:'blur'}],
+          mobile:[{required:true,message:'请输入电话号码',trigger:'blur'},{validator:checkMobile,trigger:'blur'}]
+        },
+        deleteid:''
       }
     },
     created(){
@@ -175,18 +171,13 @@ deleteid:''
         this.$message.info('操作取消')
       },
       async userState(userinfo){
-//console.log(userinfo.mg_state)
-const{data:res}=await this.$http.put('users/'+userinfo.id,userinfo)
-// console.log(res)
-
-
+        //console.log(userinfo.mg_state)
+        const{data:res}=await this.$http.put('users/'+userinfo.id,userinfo)
+        // console.log(res)
       },
-//监听添加用户对话框的关闭事件
+      //监听添加用户对话框的关闭事件
       addDialogVisibleClosed(){
-
-
-this.$refs.addFormRef.resetFields()
-
+        this.$refs.addFormRef.resetFields()
       },
       //取消删除
       deleteDialogVisibleoff(){
@@ -213,93 +204,90 @@ this.$refs.addFormRef.resetFields()
           }
         })
       },
-    //展示编辑用户的对话框
-    async showEditDialog(id){
-      const{data:res}=await this.$http.get("users/findadminbyid?id="+id)
-      console.log(res);
-      if(res.meta.status === 403){
-          this.$router.push("/welcome")
-          return this.$message.error('权限不足，无法访问')
-      }else if(res.meta.status!=200){
-        this.editDialogVisible=true
-        this.$message.error("查询失败")
-      }else{
-        this.editDialogVisible=true
-        this.editForm=res.data[0]
-        this.$message.success("查询成功")
-        // console.log(this.editForm.id)
-          }
-    },
-    //取消修改操作
-    editDialogVisibleoff(){
-      this.editDialogVisible=false
-      this.$message.info('操作取消')
-    },
-    //监听修改用户对话框的关闭事件
-    editDialogVisibleClosed(){
-this.$refs.editFormRef.resetFields()
-    },
-    editUser(){
-      this.$refs.editFormRef.validate(async valid=>{
-      if(!valid) return
-      const{data:res}=await this.$http.put('users/update',this.editForm)
-      console.log(res);
-      if(res.meta.status === 403){
-          this.$router.push("/welcome")
-          return this.$message.error('权限不足，无法访问')
-      }else if(res.meta.status!=200){
-        this.$message.error("修改用户失败")
-      }else{
-      this.$message.success("修改用户成功")
-      this.editDialogVisible=false
-      this.getUserList()
-
-    }
-})
-
-    },
-//删除用户对话框
-    deleteDialog(id){
-this.deleteDialogVisible=true
-this.deleteid=id
-    },
-    //删除用户
-   async deleteUser(){
-      console.log(this.deleteid)
-      const{data:res}=await this.$http.delete("admin/"+this.deleteid)
-      console.log(res)
-      if(res.meta.status === 403){
-          this.$router.push("/welcome")
-          return this.$message.error('权限不足，无法访问')
-      }else if(res.meta.status!=200){
-        this.$message.error("删除用户失败")
-      }else{
-        this.$message.success("删除用户成功")
-        this.deleteDialogVisible=false
+      //展示编辑用户的对话框
+      async showEditDialog(id){
+        const{data:res}=await this.$http.get("users/findadminbyid?id="+id)
+        console.log(res);
+        if(res.meta.status === 403){
+            this.$router.push("/welcome")
+            return this.$message.error('权限不足，无法访问')
+        }else if(res.meta.status!=200){
+          this.editDialogVisible=true
+          this.$message.error("查询失败")
+        }else{
+          this.editDialogVisible=true
+          this.editForm=res.data[0]
+          this.$message.success("查询成功")
+          // console.log(this.editForm.id)
+            }
+      },
+      //取消修改操作
+      editDialogVisibleoff(){
+        this.editDialogVisible=false
+        this.$message.info('操作取消')
+      },
+      //监听修改用户对话框的关闭事件
+      editDialogVisibleClosed(){
+        this.$refs.editFormRef.resetFields()
+      },
+      editUser(){
+        this.$refs.editFormRef.validate(async valid=>{
+        if(!valid) return
+        const{data:res}=await this.$http.put('users/update',this.editForm)
+        console.log(res);
+        if(res.meta.status === 403){
+            this.$router.push("/welcome")
+            return this.$message.error('权限不足，无法访问')
+        }else if(res.meta.status!=200){
+          this.$message.error("修改用户失败")
+        }else{
+        this.$message.success("修改用户成功")
+        this.editDialogVisible=false
         this.getUserList()
+        }
+        })
+      },
+      //删除管理员对话框
+      deleteDialog(id){
+        this.deleteDialogVisible=true
+        this.deleteid=id
+      },
+        //删除用户
+      async deleteUser(){
+        console.log(this.deleteid)
+        const{data:res}=await this.$http.delete("admin/"+this.deleteid)
+        console.log(res)
+        if(res.meta.status === 403){
+            this.$router.push("/welcome")
+            return this.$message.error('权限不足，无法访问')
+        }else if(res.meta.status!=200){
+          this.$message.error("删除用户失败")
+        }else{
+          this.$message.success("删除用户成功")
+          this.deleteDialogVisible=false
+          this.getUserList()
+        }
+      },
+      //根据id查询
+      async finById(){
+        if(this.input3==""||this.select==""){
+          this.getUserList()
+        }
+        if(this.input3!=""&&this.select=='2'){
+          const{data:res} =await this.$http.get('users/findCashierById?id='+this.input3)
+          console.log(res);
+          if(res.meta.status===200){
+            this.$message.success('成功')
+            //  this.userlist=res.data
+            this.userlist=res.data
+            console.log(this.userlist)
+          }else if(res.meta.status===403){
+              return this.$message.error('权限不足')
+          }else{
+            return this.$message.error('不存在用户')
+          }
+        }
       }
-    },
-    //根据id查询
-    async finById(){
-     if(this.input3==""||this.select==""){
-       this.getUserList()
-     }
-     if(this.input3!=""&&this.select=='2'){
-       const{data:res} =await this.$http.get('users/findCashierById?id='+this.input3)
-       console.log(res);
-       if(res.meta.status===200){
-         this.$message.success('成功')
-        //  this.userlist=res.data
-        this.userlist=res.data
-        console.log(this.userlist)
-
-       }else if(res.meta.status===403){
-           return this.$message.error('权限不足')
-       }else{
-         return this.$message.error('不存在用户')
-       }
-}
-    }
     }
 }
 </script>
